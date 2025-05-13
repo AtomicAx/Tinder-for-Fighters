@@ -1,2 +1,2 @@
 # Tinder-for-Fighters
-This is a new beging
+This is a new beginning
