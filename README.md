@@ -59,7 +59,7 @@ Tinder-For-Fighters/
 
 ---
 
-## 📁 Backend Folder Descriptions (Django)
+## Backend Folder Descriptions (Django)
 
 | Folder/File            | Description                                            |
 | ---------------------- | ------------------------------------------------------ |
