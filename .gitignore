@@ -1,36 +1,28 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg
-*.egg-info/
-dist/
-build/
-
-# Virtual environment
+# Python / Django
 venv/
-env/
-ENV/
-
-# Django stuff
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
 *.log
 *.pot
 *.pyc
-db.sqlite3
-media/
-staticfiles/
-local_settings.py
-
-# Environment variables
+*.db
+*.sqlite3
+/staticfiles/
+/media/
 .env
-.env.*
 
-# VSCode or IDEs
-.vscode/
-.idea/
-*.swp
-
-# Mac stuff
-.DS_Store
+# Node / Expo / React Native
+expo_tinderforfighters/node_modules/
+expo_tinderforfighters/.expo/
+expo_tinderforfighters/.expo-shared/
+expo_tinderforfighters/.DS_Store
+expo_tinderforfighters/.vscode/
+expo_tinderforfighters/dist/
+expo_tinderforfighters/web-build/
+expo_tinderforfighters/.env
 
 # Migrations (optional — if you prefer creating them fresh)
 # */migrations/*.py
