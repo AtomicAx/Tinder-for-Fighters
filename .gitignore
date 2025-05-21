@@ -1,33 +1,58 @@
 # Python / Django
 venv/
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
-*.pyd
+*.db
 *.sqlite3
 *.log
 *.pot
-*.pyc
-*.db
-*.sqlite3
 /staticfiles/
 /media/
 .env
 
 # Node / Expo / React Native
-expo_tinderforfighters/node_modules/
-expo_tinderforfighters/.expo/
-expo_tinderforfighters/.expo-shared/
-expo_tinderforfighters/.DS_Store
-expo_tinderforfighters/.vscode/
-expo_tinderforfighters/dist/
-expo_tinderforfighters/web-build/
-expo_tinderforfighters/.env
+node_modules/
+.expo/
+.expo-shared/
+.DS_Store
+.vscode/
+dist/
+web-build/
+.env.local
+.env.production
+.env.development
+expo-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Migrations (optional — if you prefer creating them fresh)
+# Native iOS
+ios/
+*.xcworkspace
+*.xcodeproj
+*.xcuserdata/
+*.xcuserstate
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.xcscheme
+
+# Native Android
+android/
+*.apk
+*.aar
+*.iml
+.gradle/
+.idea/
+build/
+
+# Gunicorn (for backend deployment)
+*.sock
+
+# Optional: Django migrations (if not tracking)
 # */migrations/*.py
 # */migrations/*.pyc
 
-# Gunicorn socket file (if you deploy using sockets)
-*.sock
+
 

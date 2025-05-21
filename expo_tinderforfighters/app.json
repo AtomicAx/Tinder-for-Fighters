@@ -1,8 +1,5 @@
 {
   "expo": {
-    "plugins": [
-      "expo-apple-authentication"
-    ],
     "name": "expo_tinderforfighters",
     "slug": "expo_tinderforfighters",
     "version": "1.0.0",
@@ -15,19 +12,38 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "scheme": "expotinderforfighters",
+    "owner": "tooshort32",
     "ios": {
       "supportsTablet": true,
-      "usesAppleSignIn": true
+      "usesAppleSignIn": true,
+      "bundleIdentifier": "com.tooshort32.expo-tinderforfighters"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.tooshort32.expo_tinderforfighters"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-apple-authentication",
+      "expo-web-browser",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.487602687272-c5m2fajd0qe5tshf7ufln52mo77c4k57"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "cb33a9d4-c8e0-4013-b0f7-81b84a0fe52d"
+      }
     }
   }
 }
