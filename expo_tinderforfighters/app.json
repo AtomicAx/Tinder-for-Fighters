@@ -1,6 +1,8 @@
 {
   "expo": {
-    "plugins": ["expo-apple-authentication"],
+    "plugins": [
+      "expo-apple-authentication"
+    ],
     "name": "expo_tinderforfighters",
     "slug": "expo_tinderforfighters",
     "version": "1.0.0",
