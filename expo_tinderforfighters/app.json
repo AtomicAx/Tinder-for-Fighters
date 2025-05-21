@@ -1,5 +1,6 @@
 {
   "expo": {
+    "plugins": ["expo-apple-authentication"],
     "name": "expo_tinderforfighters",
     "slug": "expo_tinderforfighters",
     "version": "1.0.0",
@@ -13,7 +14,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
