@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { signInWithApple } from '../services/appleAuth';
+import { signInWithGoogle } from '../services/googleAuth';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({
