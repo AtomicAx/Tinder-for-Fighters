@@ -26,7 +26,8 @@
     "react-native-keychain": "^10.0.0",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
-    "expo-linear-gradient": "~14.1.5"
+    "expo-linear-gradient": "~14.1.5",
+    "expo-secure-store": "~14.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

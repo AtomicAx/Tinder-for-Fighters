@@ -19,25 +19,31 @@
       "usesAppleSignIn": true,
       "bundleIdentifier": "com.tooshort32.expo-tinderforfighters",
       "ITSAppUsesNonExemptEncryption": false
-    }
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.tooshort32.expo_tinderforfighters"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-apple-authentication",
-      "expo-web-browser"
+      "expo-secure-store"
     ],
-    "extra": {
-      "eas": {
-        "projectId": "cb33a9d4-c8e0-4013-b0f7-81b84a0fe52d"
-      }
+    "android": {
+      "package": "com.tooshort32.expotinderforfighters"
     }
+  },
+  "android": {
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/adaptive-icon.png",
+      "backgroundColor": "#ffffff"
+    },
+    "package": "com.tooshort32.expo_tinderforfighters"
+  },
+  "web": {
+    "favicon": "./assets/favicon.png"
+  },
+  "plugins": [
+    "expo-apple-authentication",
+    "expo-web-browser"
+  ],
+  "extra": {
+    "eas": {
+      "projectId": "cb33a9d4-c8e0-4013-b0f7-81b84a0fe52d"
+    }
+  }
 }
