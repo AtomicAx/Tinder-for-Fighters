@@ -26,7 +26,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('fightapp.urls')),
+    path('', include('backend.fightapp.urls')),
     
     # Auth URLs
     path('api/auth/', include('dj_rest_auth.urls')),
