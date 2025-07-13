@@ -5,7 +5,7 @@ import * as Keychain from 'react-native-keychain';
 
 
 // Gotta change the URL to match the current URL
-const API_BASE_URL = 'http//18.208.164.77'
+const API_BASE_URL = 'http://18.208.164.77'
     
     const TOKEN_KEY = 'token';
     

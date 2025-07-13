@@ -65,3 +65,7 @@ def google_login(request):
         'email': user.email,
         'picture': picture,
     })
+    
+def all_users_view(request):
+    users = User.objects.all().values('id', 'username', 'email', 'date_joined')
+    return JsonResponse(list(users), safe=False)
