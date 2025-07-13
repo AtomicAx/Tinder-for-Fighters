@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'allauth',
@@ -152,9 +153,14 @@ AUTHENTICATION_BACKENDS = [
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+       # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
 }
 
 REST_USE_JWT = True
@@ -167,6 +173,55 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-
+CORS_ALLOWED_ORIGINS = ['http://localhost:8081']
 CORS_ALLOW_ALL_ORIGINS = True  # Safe only for dev; restrict for prod
 CORS_ALLOW_CREDENTIALS = True
+
+
+# Django AllAuth settings
+SITE_ID = 1
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+#ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+SILENCED_SYSTEM_CHECKS = [
+    'allauth.W001', # silence username required warning
+    'allauth.W002', # silence email required warning
+]
+
+# Django Rest Auth settings
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'jwt-auth',
+    'JWT_AUTH_REFRESH_COOKIE': 'jwt-refresh-auth',
+}
+
+# Custom adapters
+SOCIALACCOUNT_ADAPTER = 'fightapp.adapters.CustomSocialAccountAdapter'
+ACCOUNT_ADAPTER = 'fightapp.adapters.CustomAccountAdapter'
+
+# Google OAuth settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': config( 'GOOGLE_CLIENT_ID'),  
+            'secret': config('GOOGLE_CLIENT_SECRET'),
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'IOS': {
+            'client_id': config('GOOGLE_IOS_CLIENT_ID'),
+        },
+        'ANDROID': {
+            'client_id': config('GOOGLE_ANDROID_CLIENT_ID')
+        },
+    }
+}

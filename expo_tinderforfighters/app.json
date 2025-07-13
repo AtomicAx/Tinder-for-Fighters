@@ -17,7 +17,23 @@
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
-      "bundleIdentifier": "com.tooshort32.expo-tinderforfighters"
+      "bundleIdentifier": "com.tooshort32.expo-tinderforfighters",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleURLTypes": [
+        {
+          "CFBundleURLSchemes": [
+            "expotinderforfighters",
+            "com.tooshort32.expo-tinderforfighters"
+          ]
+        },
+        {
+          "CFBundleURLSchemes": [
+            "com.googleusercontent.apps.487602687272-c5m2fajd0qe5tshf7ufln52mo77c4k57"
+          ]
+        }
+      ]
+    }
     },
     "android": {
       "adaptiveIcon": {
