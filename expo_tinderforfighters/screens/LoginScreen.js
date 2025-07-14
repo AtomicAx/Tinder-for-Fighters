@@ -101,9 +101,10 @@ export default function LoginScreen({ navigation }) {
     const result = await login(email, password1);
 
     if (result.success) {
-      console.log('Email login success:', result.data);
+      console.log('Email login success');
       setEmail('');
       setPassword('');
+      navigation.navigate('Home');
 
     } else {
       alert("Incorrect email or password!");

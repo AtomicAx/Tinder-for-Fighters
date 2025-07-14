@@ -1,53 +1,50 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
-import * as Keychain from 'react-native-keychain';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 
+const API_BASE_URL = 'http://18.208.164.77:8000';
+const TOKEN_KEY = 'token';
 
+export const setSecureToken = async (token) => {
+  if (Platform.OS === 'web') {
+    localStorage.setItem(TOKEN_KEY, token);
+  } else {
+    try {
+      await SecureStore.setItemAsync(TOKEN_KEY, token);
+    } catch (err) {
+      console.warn('[setSecureToken] Falling back to AsyncStorage:', err.message);
+      await AsyncStorage.setItem(TOKEN_KEY, token);
+    }
+  }
+};
 
-// Gotta change the URL to match the current URL
-const API_BASE_URL = 'http://18.208.164.77'
-    
-    const TOKEN_KEY = 'token';
-    
-    export const setSecureToken = async (token) => {
-      if (Platform.OS === 'web') {
-        localStorage.setItem(TOKEN_KEY, token);
-      } else {
-        try {
-          await Keychain.setGenericPassword(TOKEN_KEY, token);
-        } catch (err) {
-          console.warn('[setSecureToken] Falling back to AsyncStorage:', err.message);
-          await AsyncStorage.setItem(TOKEN_KEY, token);
-        }
-      }
-    };
-    
-    export const getSecureToken = async () => {
-      if (Platform.OS === 'web') {
-        return localStorage.getItem(TOKEN_KEY);
-      } else {
-        try {
-          const creds = await Keychain.getGenericPassword();
-          return creds?.password || null;
-        } catch (err) {
-          console.warn('[getSecureToken] Falling back to AsyncStorage:', err.message);
-          return await AsyncStorage.getItem(TOKEN_KEY);
-        }
-      }
-    };
-    
-    export const removeSecureToken = async () => {
-      if (Platform.OS === 'web') {
-        localStorage.removeItem(TOKEN_KEY);
-      } else {
-        try {
-          await Keychain.resetGenericPassword();
-        } catch (err) {
-          console.warn('[removeSecureToken] Falling back to AsyncStorage:', err.message);
-          await AsyncStorage.removeItem(TOKEN_KEY);
-        }
-      }
-    };
+export const getSecureToken = async () => {
+  if (Platform.OS === 'web') {
+    return localStorage.getItem(TOKEN_KEY);
+  } else {
+    try {
+      const token = await SecureStore.getItemAsync(TOKEN_KEY);
+      return token || null;
+    } catch (err) {
+      console.warn('[getSecureToken] Falling back to AsyncStorage:', err.message);
+      return await AsyncStorage.getItem(TOKEN_KEY);
+    }
+  }
+};
+
+export const removeSecureToken = async () => {
+  if (Platform.OS === 'web') {
+    localStorage.removeItem(TOKEN_KEY);
+  } else {
+    try {
+      await SecureStore.deleteItemAsync(TOKEN_KEY);
+    } catch (err) {
+      console.warn('[removeSecureToken] Falling back to AsyncStorage:', err.message);
+      await AsyncStorage.removeItem(TOKEN_KEY);
+    }
+  }
+};
+
        
  /**
  * Login a user with email and password
@@ -59,7 +56,7 @@ export const loginUser = async (email, password) => {
   try {
      await AsyncStorage.removeItem('user');
      // Make HTTP request for login
-     const response = await fetch(`${API_BASE_URL}/auth/login/`, {
+     const response = await fetch(`${API_BASE_URL}/api/auth/login/`, {
        method: 'POST',
        headers: {
           'Content-Type': 'application/json',
@@ -72,18 +69,12 @@ export const loginUser = async (email, password) => {
     if (response.ok && data.access) {
         const { access, user } = data;
 
-        const pic_data_response = await fetch(`${API_BASE_URL}/profile_pic?user_id=${user.pk}`, {
-          method: 'GET',
-          headers: {'Content-Type': 'application/json'},
-        });
-        const pic_data = await pic_data_response.json();
         const userData = {
             id: user.id,
             first_name: user.first_name,
             last_name: user.last_name,
             username: user.username,
             email: user.email,
-            picture: pic_data.picture,
             auth_type: 'email',
         };
         await AsyncStorage.setItem('user', JSON.stringify(userData));
@@ -100,7 +91,7 @@ export const loginUser = async (email, password) => {
 
 export const googleSignIn = async (userData) => {
   try {
-      const loginResponse = await fetch(`${API_BASE_URL}/auth/google-login/`, {
+      const loginResponse = await fetch(`${API_BASE_URL}/api/auth/google-login/`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(userData),
