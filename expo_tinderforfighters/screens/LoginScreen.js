@@ -18,6 +18,13 @@ export default function LoginScreen({ navigation }) {
   const [password2, setConfirmPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [appleAvailable, setAppleAvailable] = useState(false);
+
+  useEffect(() => {
+  if (Platform.OS === 'ios') {
+    AppleAuthentication.isAvailableAsync().then(setAppleAvailable);
+  }
+}, []);
 
   // Google auth config
   const config = {
@@ -94,6 +101,7 @@ export default function LoginScreen({ navigation }) {
 
   // This function is for standard email/password login
   const handleEmailLogin = async () => {
+    console.log('login button pressed');
     if (!email || !password1) {
       alert("Please enter both email and password");
       return;
@@ -257,13 +265,15 @@ export default function LoginScreen({ navigation }) {
           </Text>
         </TouchableOpacity>
         {/* Apple Sign-In Button (only works on iOS devices) */}
-        <AppleAuthentication.AppleAuthenticationButton
-          buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-          buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-          cornerRadius={25}
-          style={styles.primaryButton}
-          onPress={handleAppleLogin}
-        />
+        {Platform.OS === 'ios' && appleAvailable && (
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+            cornerRadius={25}
+            style={styles.primaryButton}
+            onPress={handleAppleLogin}
+          />
+        )}
 
         {/* Temporary button to navigate manually */}
       <TouchableOpacity style={styles.forceHomeButton} onPress={() => navigation.navigate('Home')}>
