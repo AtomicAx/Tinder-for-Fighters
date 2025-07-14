@@ -26,7 +26,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['18.208.164.77', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['18.208.164.77', 'localhost', '127.0.0.1', 'tinderforfighters.servebeer.com']
 
 
 # Application definition
@@ -199,8 +199,8 @@ REST_AUTH = {
 }
 
 # Custom adapters
-SOCIALACCOUNT_ADAPTER = 'fightapp.adapters.CustomSocialAccountAdapter'
-ACCOUNT_ADAPTER = 'fightapp.adapters.CustomAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'backend.fightapp.adapters.CustomSocialAccountAdapter'
+ACCOUNT_ADAPTER = 'backend.fightapp.adapters.CustomAccountAdapter'
 
 # Google OAuth settings
 SOCIALACCOUNT_PROVIDERS = {
