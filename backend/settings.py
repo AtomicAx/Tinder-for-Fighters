@@ -180,12 +180,24 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Django AllAuth settings
 SITE_ID = 1
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'none' # ['none', 'optional', 'mandatory'] - options for this field
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 #ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
+#DEFAULT_FROM_EMAIL = 'noreply@tinderforfighters.servebeer.com'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # -- For dev use -- prints emails to console rather than sending email
+
+# For prod -- sends emails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.brevo.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = f"Tinder For Fighters <{EMAIL_HOST_USER}>"
+
 SILENCED_SYSTEM_CHECKS = [
     'allauth.W001', # silence username required warning
     'allauth.W002', # silence email required warning

@@ -1,6 +1,6 @@
 // This is a barebones screen component. Build out design, logic, and state as needed.
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Button, Image, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
@@ -131,17 +131,17 @@ export default function LoginScreen({ navigation }) {
       return;
     }
     
-    const validationMessage = validatePassword(username, email, password1)
-    if (validationMessage != null) {
-      alert(validationMessage);
-      return;
-    }
+    //const validationMessage = validatePassword(username, email, password1)
+    //if (validationMessage != null) {
+    //  alert(validationMessage);
+    //  return;
+    //}
 
-    const validateInfoMessage = await validateUsernameEmail(username, email);
-    if (validateInfoMessage != null) {
-      alert(JSON.stringify(validateInfoMessage));
-      return;
-    }
+    //const validateInfoMessage = await validateUsernameEmail(username, email);
+    //if (validateInfoMessage != null) {
+    //  alert(JSON.stringify(validateInfoMessage));
+    //  return;
+    //}
     const userData = {
       email,
       password1,
@@ -226,13 +226,18 @@ export default function LoginScreen({ navigation }) {
             />
           </View>
         )}
-       <TouchableOpacity
+        <TouchableOpacity
           style={styles.primaryButton}
           onPress={isSignUp ? handleSignUp : handleEmailLogin}
+          disabled={isLoading}
         >
+          {isLoading ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
             <Text style={styles.buttonText}>
               {isSignUp ? "Sign up" : "Login"}
             </Text>
+          )}
         </TouchableOpacity>
          
         <TouchableOpacity

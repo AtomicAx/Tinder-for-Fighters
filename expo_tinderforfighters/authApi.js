@@ -166,8 +166,9 @@ export const validateNewUser = async(userData) => {
 export const registerUser = async (userData) => {
   try {
     const { first_name, last_name, email, password1, password2, username } = userData;
+    console.log(userData);
     // Send reg data to backend
-    const response = await fetch(`${API_BASE_URL}/auth/registration/`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/registration/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -177,7 +178,7 @@ export const registerUser = async (userData) => {
     });
     
     const data = await response.json();
-
+    console.log(data);
     if (response.ok && data.access) {
         const { access, user } = data;
     
@@ -190,7 +191,7 @@ export const registerUser = async (userData) => {
             username: user.username,
 	          email: user.email,
 	          auth_type: 'email',
-            //token: access, // Use token returned from server
+            token: access, // Use token returned from server
         };
         await AsyncStorage.setItem('user', JSON.stringify(newUserData));
         await setSecureToken(access);

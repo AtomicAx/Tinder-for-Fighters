@@ -135,6 +135,8 @@ export const AuthProvider = ({ children }) => {
       await authApi.logoutUser();
       setUser(null);
       setIsAuthenticated(false);
+      console.log('user has been logged out');
+      
     } catch (error) {
       console.error('Logout error:', error);
       Alert.alert('Logout Failed', 'An unexpected error occurred. Please try again.');

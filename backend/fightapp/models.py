@@ -325,6 +325,7 @@ class UserInfo(models.Model):
     pro_record = models.TextField(blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
     gender = models.TextField(blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
         managed = False
