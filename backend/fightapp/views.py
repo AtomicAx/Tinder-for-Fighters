@@ -1,13 +1,33 @@
+from .models import UserInfo, EmailVerification
 from django.shortcuts import render
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.utils import timezone
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from django.http import JsonResponse
-from .models import UserInfo
-from django.contrib.auth.models import User
-from rest_framework.decorators import api_view
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+from datetime import timedelta
+
+# Email verification code
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def verify_email_code(request):
+    user = request.user
+    input_code = request.data.get('code')
+    
+    try:
+        verification = EmailVerification.objects.filter(
+            user=user, code=input_code, is_used=False
+        ).latest('created_at')
+    except EmailVerification.DoesNotExist:
+        return Response({'success': False, 'detail': 'Invalid or expired code'}, status=400)
+    
+    verification.delete()
+    return Response({'success': True, 'detail': 'Email verified successfully'})
+    
+    
 
 def generate_unique_username(base):
     username = base

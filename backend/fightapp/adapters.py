@@ -1,7 +1,10 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.account.adapter import DefaultAccountAdapter
+from allath.account.utils import user_email, user_username
 from django.contrib.auth.models import User
 from .models import UserInfo
+from django.urls import reverse
+from backend.emails import send_sendgrid_email
 from django.conf import settings
 import datetime
 
@@ -77,4 +80,4 @@ class CustomAccountAdapter(DefaultAccountAdapter):
                     date_joined=datetime.datetime.now(),
                 )
         
-        return user 
+        return user
