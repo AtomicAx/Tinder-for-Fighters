@@ -29,7 +29,8 @@ export default function EmailVerificationScreen() {
     sendCode();
   }, []);  
  
-  const handleVerifyCode = async (email, code) => {
+  const handleVerifyCode = async (email) => {
+    
     const result = await verifyEmailCode(email, code); // calls your API
 
     if (result.success) {

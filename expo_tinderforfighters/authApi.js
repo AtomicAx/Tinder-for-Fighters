@@ -169,12 +169,13 @@ export const registerUser = async (userData) => {
     console.log(userData);
 
     // send verification code
-    const codeResult = await fetch(`${API_BASE_URL}/api/auth/send_code/`, {
+    const codeResult = await fetch(`${API_BASE_URL}/api/auth/send-code/`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ email }),
     });
 
+    
     // email verification
     const verifyResult = await fetch(`${API_BASE_URL}/api/auth/email-verification/`, {
       method: 'POST',
