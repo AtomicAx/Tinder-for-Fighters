@@ -1,5 +1,5 @@
 import random
-from .models import EmailVerification
+from backend.fightapp.models import EmailVerification
 from backend.emails import send_sendgrid_email
 
 def generate_verification_code():
