@@ -1,5 +1,5 @@
 import random
-from backend.models import EmailVerification
+from .models import EmailVerification
 from backend.emails import send_sendgrid_email
 
 def generate_verification_code():
