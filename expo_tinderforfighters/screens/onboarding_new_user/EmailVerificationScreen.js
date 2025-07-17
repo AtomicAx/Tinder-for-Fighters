@@ -1,5 +1,5 @@
 import React, { useState, useEffect }from 'react';
-import { View, Text, TextInput, Button, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, Alert, StyleSheet, Platform } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../context/authContext';
 import { sendEmailCode, verifyEmailCode } from '../../verificationApi';
@@ -17,13 +17,27 @@ export default function EmailVerificationScreen() {
   const { userData } = route.params;
 
   const [code, setCode] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  
+  useEffect(() => {
+    let interval;
+    if (resendCooldown > 0) {
+        interval = setInterval(() => {
+        setResendCooldown((prev) => prev - 1);
+        }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
+
+
 
   useEffect(() => {
     const sendCode = async () => {
         const result = await sendEmailCode(userData.email);
         if (!result.success) {
             Alert.alert('Error sending verification code', result.error || 'Unknown error');
-            //navigation.goBack();
+            navigation.goBack();
         } 
     };
     sendCode();
@@ -33,17 +47,34 @@ export default function EmailVerificationScreen() {
     
     const result = await verifyEmailCode(userData.email, code); // calls your API
 
+    if (verifying) return;
+    setVerifying(true);
+
     if (result.success) {
-      navigation.replace('Home'); // change to next step of account creation
+        const registerResult = await register(userData);
+        if (registerResult.success) {
+            navigation.replace('Home'); // change to next step of account creation
+        } else {
+            Alert.alert('Registration Failed', registerResult.error);
+        }
+        
     } else {
       Alert.alert('Verification Failed', result.error || 'Incorrect Code');
     }
+
+    setVerifying(false);
   };
 
   const handleResendCode = async () => {
+    if (resendCooldown > 0) return;
+
     const result = await sendEmailCode(userData.email);
     if (!result.success) {
         Alert.alert('Error resending code', result.error || 'Try again later');
+        
+    } else {
+        Alert.alert('Verification code resent', 'Check your inbox.');
+        setResendCooldown(30);
     }
   };
 
@@ -64,7 +95,7 @@ export default function EmailVerificationScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Enter the 6-digit verification code sent to your email</Text>
-      <View>
+      <View style={styles.inputCodeView}>
         <CodeField
             ref={ref}
             {...props}
@@ -90,17 +121,21 @@ export default function EmailVerificationScreen() {
       <TouchableOpacity 
         style={styles.primaryButton}
         onPress={handleVerifyCode} 
-        disabled={isLoading}
+        disabled={verifying}
       >
         <Text style={styles.buttonText}>Verify</Text>
       </TouchableOpacity> 
     
       <TouchableOpacity
-        style={styles.primaryButton}
+        style={[styles.primaryButton, resendCooldown > 0 && { opacity: 0.5 }]}
         onPress={handleResendCode}
+        disabled={resendCooldown > 0}
       >
-        <Text style={styles.buttonText}>Resend Code</Text>
-      </TouchableOpacity>
+  <Text style={styles.buttonText}>
+    {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Code'}
+  </Text>
+</TouchableOpacity>
+
     </View>
   );
 };
@@ -109,10 +144,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 60,
     backgroundColor: '#011082',
+    
   },
   inputView: {
     alignSelf: 'center',
-    width: '80%',
     backgroundColor: '#F5F8FA',
     borderRadius: 25,
     height: 50,
@@ -127,7 +162,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     paddingLeft: 20,
-    borderStyle: 'dashed',
     textAlignVertical: 'center',
     color: '#14171A',
   },
@@ -155,18 +189,26 @@ const styles = StyleSheet.create({
   titleText: {
     marginTop: 50,
     marginBottom: 50,
+    marginHorizontal: 20,
     textAlign: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
     color: 'white',
     fontSize: 24
   },
-  codeFiledRoot: {
-    marginTop: 20,
-    paddingLeft: 10,
-    width: 225,
-    alignContent: 'center',
-  },
+  codeFiledRoot: Platform.select ({
+    ios: {
+        marginTop: 20,
+        marginHorizontal: 10,
+        width: 225,
+    },
+
+    android: {
+        marginTop: 20,
+        marginHorizontal: 20,
+        width: 225,
+    }    
+  }),
   cellRoot: {
     width: 50,
     height: 60,
