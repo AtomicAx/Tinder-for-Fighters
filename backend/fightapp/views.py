@@ -12,6 +12,7 @@ from datetime import timedelta
 
 # Email verification code
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def verify_email_code(request):
     user = request.user
     input_code = request.data.get('code')
