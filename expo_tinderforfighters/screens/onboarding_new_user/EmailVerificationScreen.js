@@ -2,7 +2,7 @@ import React, { useState, useEffect }from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../context/authContext';
-import { verifyEmailCode } from '../../authApi';
+import { sendEmailCode, verifyEmailCode } from '../../verificationApi';
 import {
   CodeField,
   Cursor,
@@ -20,7 +20,7 @@ export default function EmailVerificationScreen() {
 
   useEffect(() => {
     const sendCode = async () => {
-        const result = await register(userData);
+        const result = await sendEmailCode(userData.email);
         if (!result.success) {
             Alert.alert('Error sending verification code', result.error || 'Unknown error');
             //navigation.goBack();
@@ -29,9 +29,9 @@ export default function EmailVerificationScreen() {
     sendCode();
   }, []);  
  
-  const handleVerifyCode = async (email) => {
+  const handleVerifyCode = async () => {
     
-    const result = await verifyEmailCode(email, code); // calls your API
+    const result = await verifyEmailCode(userData.email, code); // calls your API
 
     if (result.success) {
       navigation.replace('Home'); // change to next step of account creation
@@ -41,7 +41,7 @@ export default function EmailVerificationScreen() {
   };
 
   const handleResendCode = async () => {
-    const result = await register(userData);
+    const result = await sendEmailCode(userData.email);
     if (!result.success) {
         Alert.alert('Error resending code', result.error || 'Try again later');
     }
@@ -55,6 +55,11 @@ export default function EmailVerificationScreen() {
     value,
     setValue,
   });
+
+  useEffect(() => {
+  setCode(value);
+}, [value]);
+
   
   return (
     <View style={styles.container}>
