@@ -6,13 +6,12 @@ from django.utils import timezone
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import timedelta
 
 # Email verification code
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def verify_email_code(request):
     user = request.user
     input_code = request.data.get('code')
