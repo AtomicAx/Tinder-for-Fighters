@@ -1,8 +1,9 @@
 from django.urls import path
 from django.conf import settings
 from . import views
-from .views import google_login, all_users_view
+from .views import google_login, all_users_view, verify_email_code
 urlpatterns = [
-    path('api/auth/google-login/', google_login),
+    path('api/auth/google-login/', google_login, name='google_login'),
+    path('api/auth/email-verification/', verify_email_code, name='email_verification'),
     path('api/users/', all_users_view, name='all_users')
 ]

@@ -167,6 +167,20 @@ export const registerUser = async (userData) => {
   try {
     const { first_name, last_name, email, password1, password2, username } = userData;
     console.log(userData);
+
+    // email verification
+    const verifyResult = await fetch(`${API_BASE_URL}/api/auth/email-verification`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ email }),
+    });
+
+    const verifyData = await verifyResult.json();
+    console.log('Verify Result', verifyData);
+
+    if (!verifyResult.ok || verifyData.success === false) {
+      return {success: 'false', error: verifyData.detail || 'Email verification failed'};
+    }
     // Send reg data to backend
     const response = await fetch(`${API_BASE_URL}/api/auth/registration/`, {
         method: 'POST',

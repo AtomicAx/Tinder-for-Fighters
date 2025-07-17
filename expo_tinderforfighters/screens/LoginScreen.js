@@ -6,6 +6,7 @@ import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { useAuth } from '../context/authContext';
 import { LinearGradient } from 'expo-linear-gradient';
+import EmailVerificationScreen from './onboarding_new_user/EmailVerificationScreen';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -148,17 +149,17 @@ export default function LoginScreen({ navigation }) {
       password2,
       username
     };
+    navigation.navigate('EmailVerification', { userData });
+    //const result = await register(userData);
     
-    const result = await register(userData);
-    
-    if (result.success) {
-      // Navigation will be handled by AuthContext
-      setUsername('');
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
-      setIsSignUp(false);
-    }
+    //if (result.success) {
+      //setUsername('');
+      //setEmail('');
+      //setPassword('');
+      //setConfirmPassword('');
+      //setIsSignUp(false);
+      
+   // }
   };
 
   // toggle between login and sign up
