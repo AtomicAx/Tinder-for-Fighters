@@ -9,8 +9,18 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import timedelta
+from services import email_verification
 
-# Email verification code
+# send email verification code
+@api_view(['POST'])
+def send_code(request):
+    email = request.data.get('email')
+    
+    email_verification.create_and_send_verification(email)
+    
+    return Response({'message': f'Code has been sent to {email}'})
+    
+# Email verification
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def verify_email_code(request):
