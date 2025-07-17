@@ -14,12 +14,12 @@ from datetime import timedelta
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def verify_email_code(request):
-    user = request.user
+    email = request.data.get('email')
     input_code = request.data.get('code')
     
     try:
         verification = EmailVerification.objects.filter(
-            user=user, code=input_code, is_used=False
+            email=email, code=input_code, is_used=False
         ).latest('created_at')
     except EmailVerification.DoesNotExist:
         return Response({'success': False, 'detail': 'Invalid or expired code'}, status=400)

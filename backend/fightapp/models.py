@@ -332,7 +332,7 @@ class UserInfo(models.Model):
         db_table = 'user_info'
 
 class EmailVerification(models.Model):
-    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    email = models.EmailField()
     code = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
     is_used = models.BooleanField(default=False)
