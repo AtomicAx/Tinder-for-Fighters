@@ -45,21 +45,21 @@ export const removeSecureToken = async () => {
   }
 };
 
-       
- /**
- * Login a user with email and password
- * @param {string} email - User's email
- * @param {string} password - User's password
- * @returns {Promise<Object>} - User data or error
- */
+
+/**
+* Login a user with email and password
+* @param {string} email - User's email
+* @param {string} password - User's password
+* @returns {Promise<Object>} - User data or error
+*/
 export const loginUser = async (email, password) => {
   try {
-     await AsyncStorage.removeItem('user');
-     // Make HTTP request for login
-     const response = await fetch(`${API_BASE_URL}/api/auth/login/`, {
-       method: 'POST',
-       headers: {
-          'Content-Type': 'application/json',
+    await AsyncStorage.removeItem('user');
+    // Make HTTP request for login
+    const response = await fetch(`${API_BASE_URL}/api/auth/login/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
     });
@@ -67,56 +67,56 @@ export const loginUser = async (email, password) => {
     const data = await response.json();
 
     if (response.ok && data.access) {
-        const { access, user } = data;
+      const { access, user } = data;
 
-        const userData = {
-            id: user.id,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            username: user.username,
-            email: user.email,
-            auth_type: 'email',
-        };
-        await AsyncStorage.setItem('user', JSON.stringify(userData));
-        await setSecureToken(access);
-       return { success: true, user: userData };
-    }  else {
-       return { success: false, error: 'Invalid Credentials' };
+      const userData = {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        username: user.username,
+        email: user.email,
+        auth_type: 'email',
+      };
+      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      await setSecureToken(access);
+      return { success: true, user: userData };
+    } else {
+      return { success: false, error: 'Invalid Credentials' };
     }
   } catch (error) {
     console.error('Login API error:', error);
-    return {success: false, error: 'An error occurred during login'};
-  }  
+    return { success: false, error: 'An error occurred during login' };
+  }
 };
 
 export const googleSignIn = async (userData) => {
   try {
-      const loginResponse = await fetch(`${API_BASE_URL}/api/auth/google-login/`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(userData),
-      });
+    const loginResponse = await fetch(`${API_BASE_URL}/api/auth/google-login/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
 
-      const loginData = await loginResponse.json();
-      if (!loginResponse.ok) {
-        console.error("Google login failed", data);
-        return {success: false, error: data.error || 'Login failed'}
-      }
-      
-      
-      const fullUserData = {
-        ...loginData,
-        //token: loginData.access,
-      };
+    const loginData = await loginResponse.json();
+    if (!loginResponse.ok) {
+      console.error("Google login failed", data);
+      return { success: false, error: data.error || 'Login failed' }
+    }
 
 
-      await AsyncStorage.setItem('user', JSON.stringify(fullUserData));
-      await setSecureToken(loginData.access);
-      return {success: true, ...fullUserData};
-      
+    const fullUserData = {
+      ...loginData,
+      //token: loginData.access,
+    };
+
+
+    await AsyncStorage.setItem('user', JSON.stringify(fullUserData));
+    await setSecureToken(loginData.access);
+    return { success: true, ...fullUserData };
+
   } catch (error) {
-      console.error('googleSignIn error', error);
-      return {success: false, error: error.message};
+    console.error('googleSignIn error', error);
+    return { success: false, error: error.message };
   }
 };
 
@@ -126,7 +126,7 @@ export const googleSignIn = async (userData) => {
  * @param {Object} userData - User registration data
  * @returns {Promise<Object>} - New user data or error
  */
-export const validateNewUser = async(userData) => {
+export const validateNewUser = async (userData) => {
   try {
     const { email, username } = userData;
 
@@ -143,18 +143,18 @@ export const validateNewUser = async(userData) => {
 
     if (data.email_exists) {
       console.log("Account with that email exists: ", email);
-      return {success: false, email: email};
+      return { success: false, email: email };
     } else if (data.username_exists) {
       console.log("That username is not available: ", username);
-      return {success: false, username: username};
+      return { success: false, username: username };
     } else {
       console.log("Email and username have been validated: ", email, username);
-      return {success: true, email: email, username: username};
+      return { success: true, email: email, username: username };
     }
   }
-  catch(error) {
+  catch (error) {
     console.log("Error during validation: ", error);
-    return {success: false, error: "An Error occurred during validation"};
+    return { success: false, error: "An Error occurred during validation" };
   }
 }
 
@@ -165,47 +165,47 @@ export const validateNewUser = async(userData) => {
  */
 export const registerUser = async (userData) => {
   try {
-    const { first_name, last_name, email, password1, password2, username} = userData;
+    const { first_name, last_name, email, password1, password2, username } = userData;
     console.log(userData);
 
     // Send reg data to backend
     const response = await fetch(`${API_BASE_URL}/api/auth/registration/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ first_name, last_name, username, email, password1, password2}),
-  
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ first_name, last_name, username, email, password1, password2 }),
+
     });
-    
+
     const data = await response.json();
     console.log(data);
     if (response.ok && data.access) {
-        const { access, user } = data;
-    
-        
-        // Store user session in Async
-        const newUserData = {
-            id: userData.id,
-            first_name: userData.first_name,
-            last_name: userData.last_name,
-            username: user.username,
-	          email: user.email,
-	          auth_type: 'email',
-            token: access, // Use token returned from server
-        };
-        await AsyncStorage.setItem('user', JSON.stringify(newUserData));
-        await setSecureToken(access);
+      const { access, user } = data;
 
-        return { success: true, user: newUserData };
-    }   else {
-	return { success: false, error: 'Registration Failed' };
+
+      // Store user session in Async
+      const newUserData = {
+        id: userData.id,
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+        username: user.username,
+        email: user.email,
+        auth_type: 'email',
+        token: access, // Use token returned from server
+      };
+      await AsyncStorage.setItem('user', JSON.stringify(newUserData));
+      await setSecureToken(access);
+
+      return { success: true, user: newUserData };
+    } else {
+      return { success: false, error: 'Registration Failed' };
     }
   } catch (error) {
     console.error('Registration API error:', error);
     return { success: false, error: 'An error occurred during registration' };
   }
-}; 
+};
 
 /**
  * Reset a user's password
@@ -216,24 +216,24 @@ export const resetPassword = async (email) => {
   try {
     // Send request to reset password
     const response = await fetch(`${API_BASE_URL}/auth/password/reset`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
     });
 
-   const data = await response.json();
+    const data = await response.json();
 
-   if (response.ok && data.success) {
-       return { success: true, message: 'Password reset email sent' };
-   } else {
-       return { success: false, error: 'No account found with this email' };
-   } 
- } catch (error) {
-   console.error('Password reset API error', error);
-   return {success: false, error: 'An error occurred during password reset' };
- }
+    if (response.ok && data.success) {
+      return { success: true, message: 'Password reset email sent' };
+    } else {
+      return { success: false, error: 'No account found with this email' };
+    }
+  } catch (error) {
+    console.error('Password reset API error', error);
+    return { success: false, error: 'An error occurred during password reset' };
+  }
 };
 
 /**
@@ -245,13 +245,13 @@ export const logoutUser = async () => {
     // Clear user session
     await AsyncStorage.removeItem("user");
     await removeSecureToken();
-    
+
     return { success: true };
   } catch (error) {
     console.error("Logout API error:", error);
-    return { 
-      success: false, 
-      error: "An error occurred during logout" 
+    return {
+      success: false,
+      error: "An error occurred during logout"
     };
   }
 };
@@ -262,11 +262,11 @@ export const logoutUser = async () => {
  */
 export const getCurrentUser = async () => {
   try {
-    
+
     const userData = await AsyncStorage.getItem("user");
-    
+
     if (!userData) return null;
-    
+
     return JSON.parse(userData);
   } catch (error) {
     console.error("Get current user error:", error);
@@ -283,14 +283,14 @@ export const verifyToken = async (token) => {
   try {
     userToken = await getSecureToken();
     if (!userToken) return false;
-    
+
     //const user = JSON.parse(userData);
     return userToken === token;
   } catch (error) {
     console.error("Token verification error:", error);
     return false;
   }
-}; 
+};
 
 /**
  * Search for users by username
@@ -339,7 +339,7 @@ export const getUserProfile = async (username) => {
       return { success: false, error: 'User not authenticated' };
     }
     const url = `${API_BASE_URL}/user_profile/${encodeURIComponent(username)}/`;
-    
+
     const token = await getSecureToken();
     const response = await fetch(url, {
       method: 'GET',
@@ -348,7 +348,7 @@ export const getUserProfile = async (username) => {
         'Authorization': `Bearer ${token}`
       }
     });
-    
+
     // Get the response data
     const data = await response.json();
 
@@ -356,16 +356,16 @@ export const getUserProfile = async (username) => {
       return { success: true, profile: data };
     } else {
       console.error(`[getUserProfile] Error for ${username}:`, data.error || response.statusText);
-      return { 
-        success: false, 
-        error: data.error || `Error fetching user profile (${response.status})` 
+      return {
+        success: false,
+        error: data.error || `Error fetching user profile (${response.status})`
       };
     }
   } catch (error) {
     console.error(`[getUserProfile] Exception for ${username}:`, error);
-    return { 
-      success: false, 
-      error: `An error occurred while fetching the profile: ${error.message}` 
+    return {
+      success: false,
+      error: `An error occurred while fetching the profile: ${error.message}`
     };
   }
 };

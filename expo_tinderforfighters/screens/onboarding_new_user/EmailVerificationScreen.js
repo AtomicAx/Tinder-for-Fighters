@@ -1,31 +1,32 @@
-import React, { useState, useEffect }from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, TouchableOpacity, Alert, StyleSheet, Platform } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../context/authContext';
 import { sendEmailCode, verifyEmailCode } from '../../verificationApi';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
   CodeField,
   Cursor,
   useBlurOnFulfill,
   useClearByFocusCell,
-} from 'react-native-confirmation-code-field'; 
+} from 'react-native-confirmation-code-field';
 
 export default function EmailVerificationScreen() {
-  const {register, isLoading } = useAuth();
+  const { register, isLoading } = useAuth();
   const route = useRoute();
   const navigation = useNavigation();
-  const { userData } = route.params;
+  //const { userData } = route.params;
 
   const [code, setCode] = useState('');
   const [verifying, setVerifying] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
-  
+
   useEffect(() => {
     let interval;
     if (resendCooldown > 0) {
-        interval = setInterval(() => {
+      interval = setInterval(() => {
         setResendCooldown((prev) => prev - 1);
-        }, 1000);
+      }, 1000);
     }
     return () => clearInterval(interval);
   }, [resendCooldown]);
@@ -34,30 +35,30 @@ export default function EmailVerificationScreen() {
 
   useEffect(() => {
     const sendCode = async () => {
-        const result = await sendEmailCode(userData.email);
-        if (!result.success) {
-            Alert.alert('Error sending verification code', result.error || 'Unknown error');
-            navigation.goBack();
-        } 
+      const result = await sendEmailCode(userData.email);
+      if (!result.success) {
+        Alert.alert('Error sending verification code', result.error || 'Unknown error');
+        navigation.goBack();
+      }
     };
     sendCode();
-  }, []);  
- 
+  }, []);
+
   const handleVerifyCode = async () => {
-    
+
     const result = await verifyEmailCode(userData.email, code); // calls your API
 
     if (verifying) return;
     setVerifying(true);
 
     if (result.success) {
-        const registerResult = await register(userData);
-        if (registerResult.success) {
-            navigation.replace('Home'); // change to next step of account creation
-        } else {
-            Alert.alert('Registration Failed', registerResult.error);
-        }
-        
+      const registerResult = await register(userData);
+      if (registerResult.success) {
+        navigation.replace('Home'); // change to next step of account creation
+      } else {
+        Alert.alert('Registration Failed', registerResult.error);
+      }
+
     } else {
       Alert.alert('Verification Failed', result.error || 'Incorrect Code');
     }
@@ -70,73 +71,75 @@ export default function EmailVerificationScreen() {
 
     const result = await sendEmailCode(userData.email);
     if (!result.success) {
-        Alert.alert('Error resending code', result.error || 'Try again later');
-        
+      Alert.alert('Error resending code', result.error || 'Try again later');
+
     } else {
-        Alert.alert('Verification code resent', 'Check your inbox.');
-        setResendCooldown(30);
+      Alert.alert('Verification code resent', 'Check your inbox.');
+      setResendCooldown(30);
     }
   };
 
   // Underline confirmation code input
   const CELL_COUNT = 6;
   const [value, setValue] = useState('');
-  const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
 
   useEffect(() => {
-  setCode(value);
-}, [value]);
+    setCode(value);
+  }, [value]);
 
-  
+
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={['#0052FF', '#4F8FFF', '#E5EDFF']}
+      style={styles.container}>
       <Text style={styles.titleText}>Enter the 6-digit verification code sent to your email</Text>
       <View style={styles.inputCodeView}>
         <CodeField
-            ref={ref}
-            {...props}
-            value={value}
-            onChangeText={setValue}
-            cellCount={CELL_COUNT}
-            rootStyle={styles.codeFiledRoot}
-            keyboardType="number-pad"
-            textContentType="oneTimeCode"
-            renderCell={({index, symbol, isFocused}) => (
-              <View
-                // Make sure that you pass onLayout={getCellOnLayoutHandler(index)} prop to root component of "Cell"
-                onLayout={getCellOnLayoutHandler(index)}
-                key={index}
-                style={[styles.cellRoot, isFocused && styles.focusCell]}>
-                <Text style={styles.cellText}>
+          ref={ref}
+          {...props}
+          value={value}
+          onChangeText={setValue}
+          cellCount={CELL_COUNT}
+          rootStyle={styles.codeFiledRoot}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          renderCell={({ index, symbol, isFocused }) => (
+            <View
+              // Make sure that you pass onLayout={getCellOnLayoutHandler(index)} prop to root component of "Cell"
+              onLayout={getCellOnLayoutHandler(index)}
+              key={index}
+              style={[styles.cellRoot, isFocused && styles.focusCell]}>
+              <Text style={styles.cellText}>
                 {symbol || (isFocused ? <Cursor /> : null)}
-                </Text>
-              </View>
-            )}
+              </Text>
+            </View>
+          )}
         />
       </View>
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.primaryButton}
-        onPress={handleVerifyCode} 
+        onPress={handleVerifyCode}
         disabled={verifying}
       >
         <Text style={styles.buttonText}>Verify</Text>
-      </TouchableOpacity> 
-    
+      </TouchableOpacity>
+
       <TouchableOpacity
         style={[styles.primaryButton, resendCooldown > 0 && { opacity: 0.5 }]}
         onPress={handleResendCode}
         disabled={resendCooldown > 0}
       >
-  <Text style={styles.buttonText}>
-    {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Code'}
-  </Text>
-</TouchableOpacity>
+        <Text style={styles.buttonText}>
+          {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Code'}
+        </Text>
+      </TouchableOpacity>
 
-    </View>
+    </LinearGradient>
   );
 };
 const styles = StyleSheet.create({
@@ -144,7 +147,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 60,
     backgroundColor: '#011082',
-    
+
   },
   inputView: {
     alignSelf: 'center',
@@ -154,7 +157,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderColor: 'white',
-    
+
     textAlign: 'center',
   },
   textInput: {
@@ -182,8 +185,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   root: {
-    alignSelf: 'center', 
-    padding: 20, 
+    alignSelf: 'center',
+    padding: 20,
     minHeight: 300
   },
   titleText: {
@@ -196,18 +199,18 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 24
   },
-  codeFiledRoot: Platform.select ({
+  codeFiledRoot: Platform.select({
     ios: {
-        marginTop: 20,
-        marginHorizontal: 10,
-        width: 225,
+      marginTop: 20,
+      marginHorizontal: 10,
+      width: 225,
     },
 
     android: {
-        marginTop: 20,
-        marginHorizontal: 20,
-        width: 225,
-    }    
+      marginTop: 20,
+      marginHorizontal: 20,
+      width: 225,
+    }
   }),
   cellRoot: {
     width: 50,
