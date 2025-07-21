@@ -4,7 +4,7 @@ import { View, Text, Button } from 'react-native';
 import { useAuth } from '../context/authContext';
 
 export default function HomeScreen({ navigation }) {
-  const { user, logout} = useAuth();
+  const { user, logout } = useAuth();
   console.log(user);
   const username = user?.username;
   const handleLogout = async () => {

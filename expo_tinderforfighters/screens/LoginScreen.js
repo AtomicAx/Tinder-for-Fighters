@@ -12,7 +12,7 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen({ navigation }) {
   const { login, validate, register, signInWithGoogle, signInWithApple, resetPassword, isLoading } = useAuth();
-  
+
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password1, setPassword] = useState('');
@@ -22,10 +22,10 @@ export default function LoginScreen({ navigation }) {
   const [appleAvailable, setAppleAvailable] = useState(false);
 
   useEffect(() => {
-  if (Platform.OS === 'ios') {
-    AppleAuthentication.isAvailableAsync().then(setAppleAvailable);
-  }
-}, []);
+    if (Platform.OS === 'ios') {
+      AppleAuthentication.isAvailableAsync().then(setAppleAvailable);
+    }
+  }, []);
 
   // Google auth config
   const config = {
@@ -51,13 +51,13 @@ export default function LoginScreen({ navigation }) {
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
-      
+
       if (!userInfoResponse.ok) {
         throw new Error('Failed to get user info from Google');
       }
-      
+
       const userInfo = await userInfoResponse.json();
-      
+
       // Create or sign in the user
       const userData = {
         id: userInfo.id,
@@ -68,20 +68,20 @@ export default function LoginScreen({ navigation }) {
         googleId: userInfo.id,
         picture: userInfo.picture
       };
-      
+
       const result = await signInWithGoogle(userData);
-      
+
       if (result.success) {
       } else {
-          throw new Error("Google login/register failed");
+        throw new Error("Google login/register failed");
       }
-      
-      } catch (error) {
-        console.error("Google sign in error:", error);
-      }
-    };
-  
-    // This function calls the Apple Sign-In service and navigates on success
+
+    } catch (error) {
+      console.error("Google sign in error:", error);
+    }
+  };
+
+  // This function calls the Apple Sign-In service and navigates on success
   const handleAppleLogin = async () => {
     const result = await signInWithApple();
 
@@ -126,12 +126,12 @@ export default function LoginScreen({ navigation }) {
       alert("Please fill in all fields");
       return;
     }
-    
+
     if (password1 !== password2) {
       alert("Passwords do not match");
       return;
     }
-    
+
     //const validationMessage = validatePassword(username, email, password1)
     //if (validationMessage != null) {
     //  alert(validationMessage);
@@ -151,15 +151,15 @@ export default function LoginScreen({ navigation }) {
     };
     navigation.navigate('EmailVerification', { userData });
     //const result = await register(userData);
-    
+
     //if (result.success) {
-      //setUsername('');
-      //setEmail('');
-      //setPassword('');
-      //setConfirmPassword('');
-      //setIsSignUp(false);
-      
-   // }
+    //setUsername('');
+    //setEmail('');
+    //setPassword('');
+    //setConfirmPassword('');
+    //setIsSignUp(false);
+
+    // }
   };
 
   // toggle between login and sign up
@@ -171,16 +171,16 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-   
-   <LinearGradient
-    colors={['#0052FF', '#4F8FFF','#E5EDFF']}
-    style={styles.container}>
 
-       <Text style={styles.titleText}>
-          {isSignUp ? "Create your account" : "Log in to TFF"}
-        </Text>
-        
-        {isSignUp && (
+    <LinearGradient
+      colors={['#0052FF', '#4F8FFF', '#E5EDFF']}
+      style={styles.container}>
+
+      <Text style={styles.titleText}>
+        {isSignUp ? "Create your account" : "Log in to TFF"}
+      </Text>
+
+      {isSignUp && (
         <View style={styles.inputView}>
           <TextInput
             style={styles.textInput}
@@ -191,101 +191,101 @@ export default function LoginScreen({ navigation }) {
             autoCapitalize="none"
           />
         </View>
-        )}
+      )}
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Email"
+          placeholderTextColor="#657786"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+      </View>
+
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Password"
+          placeholderTextColor="#657786"
+          value={password1}
+          onChangeText={setPassword}
+          secureTextEntry={true}
+        />
+      </View>
+
+      {isSignUp && (
         <View style={styles.inputView}>
           <TextInput
             style={styles.textInput}
-            placeholder="Email"
+            placeholder="Confirm Password"
             placeholderTextColor="#657786"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </View>
-        
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Password"
-            placeholderTextColor="#657786"
-            value={password1}
-            onChangeText={setPassword}
+            value={password2}
+            onChangeText={setConfirmPassword}
             secureTextEntry={true}
           />
         </View>
-
-         {isSignUp && (
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Confirm Password"
-              placeholderTextColor="#657786"
-              value={password2}
-              onChangeText={setConfirmPassword}
-              secureTextEntry={true}
-            />
-          </View>
+      )}
+      <TouchableOpacity
+        style={styles.primaryButton}
+        onPress={isSignUp ? handleSignUp : handleEmailLogin}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <ActivityIndicator color="#FFFFFF" />
+        ) : (
+          <Text style={styles.buttonText}>
+            {isSignUp ? "Sign up" : "Login"}
+          </Text>
         )}
-        <TouchableOpacity
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.secondaryButton}
+        onPress={toggleAuthMode}
+      >
+        <Text style={styles.secondaryButtonText}>
+          {isSignUp
+            ? "Already have an account? Login"
+            : "Don't have an account? Sign up"}
+        </Text>
+      </TouchableOpacity>
+
+      <View style={styles.dividerContainer}>
+        <View style={styles.divider} />
+        <Text style={styles.orText}>or</Text>
+        <View style={styles.divider} />
+      </View>
+
+      <TouchableOpacity
+        style={styles.googleButton}
+        onPress={() => promptAsync()}
+      >
+        <Image
+          source={require("../assets/google_icon.png")}
+          style={styles.googleIcon}
+        />
+        <Text style={styles.googleButtonText}>
+          Continue with Google
+        </Text>
+      </TouchableOpacity>
+      {/* Apple Sign-In Button (only works on iOS devices) */}
+      {Platform.OS === 'ios' && appleAvailable && (
+        <AppleAuthentication.AppleAuthenticationButton
+          buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+          buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+          cornerRadius={25}
           style={styles.primaryButton}
-          onPress={isSignUp ? handleSignUp : handleEmailLogin}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator color="#FFFFFF" />
-          ) : (
-            <Text style={styles.buttonText}>
-              {isSignUp ? "Sign up" : "Login"}
-            </Text>
-          )}
-        </TouchableOpacity>
-         
-        <TouchableOpacity
-          style={styles.secondaryButton}
-          onPress={toggleAuthMode}
-        >
-          <Text style={styles.secondaryButtonText}>
-            {isSignUp
-              ? "Already have an account? Login"
-              : "Don't have an account? Sign up"}
-          </Text>
-        </TouchableOpacity>
+          onPress={handleAppleLogin}
+        />
+      )}
 
-        <View style={styles.dividerContainer}>
-          <View style={styles.divider} />
-          <Text style={styles.orText}>or</Text>
-          <View style={styles.divider} />
-        </View>
-        
-        <TouchableOpacity
-          style={styles.googleButton}
-          onPress={() => promptAsync()}
-        >
-          <Image
-            source={require("../assets/google_icon.png")}
-            style={styles.googleIcon}
-          />
-          <Text style={styles.googleButtonText}>
-            Continue with Google
-          </Text>
-        </TouchableOpacity>
-        {/* Apple Sign-In Button (only works on iOS devices) */}
-        {Platform.OS === 'ios' && appleAvailable && (
-          <AppleAuthentication.AppleAuthenticationButton
-            buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-            cornerRadius={25}
-            style={styles.primaryButton}
-            onPress={handleAppleLogin}
-          />
-        )}
-
-        {/* Temporary button to navigate manually */}
-      <TouchableOpacity style={styles.forceHomeButton} onPress={() => navigation.navigate('Home')}>
+      {/* Temporary button to navigate manually */}
+      <TouchableOpacity style={styles.forceHomeButton} onPress={() => navigation.navigate('Phone')}>
         <Text>Home</Text>
       </TouchableOpacity>
-      </LinearGradient>
+    </LinearGradient>
   );
 };
 
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderColor: 'white',
-    
+
     textAlign: 'center',
   },
   textInput: {

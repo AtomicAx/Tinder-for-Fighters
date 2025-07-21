@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
       try {
         setIsLoading(true);
         const currentUser = await authApi.getCurrentUser();
-        
+
         if (currentUser) {
           setUser(currentUser);
           setIsAuthenticated(true);
@@ -41,10 +41,10 @@ export const AuthProvider = ({ children }) => {
   // Login function
   const login = async (email, password) => {
     setIsLoading(true);
-    
+
     try {
       const result = await authApi.loginUser(email, password);
-      
+
       if (result.success) {
         setUser(result.user);
         setIsAuthenticated(true);
@@ -69,25 +69,25 @@ export const AuthProvider = ({ children }) => {
       if (result.success) {
         return { success: true };
       } else if (result.email) {
-        return { success: false, error: "An account with that email exists"};
+        return { success: false, error: "An account with that email exists" };
       } else if (result.username) {
-        return { success: false, error: "That username is unavailable"};
+        return { success: false, error: "That username is unavailable" };
       } else {
         console.log("Something went wrong in validate");
-        return {success: false, error: "Something went wrong in validate"};
+        return { success: false, error: "Something went wrong in validate" };
       }
     } catch (error) {
       console.error('Validation Error:', error);
-      return {success: false, error: 'Validation Error'};
+      return { success: false, error: 'Validation Error' };
     }
   };
   // Register function
   const register = async (userData) => {
     setIsLoading(true);
-    
+
     try {
       const result = await authApi.registerUser(userData);
-      
+
       if (result.success) {
         setUser(result.user);
         setIsAuthenticated(true);
@@ -107,10 +107,10 @@ export const AuthProvider = ({ children }) => {
   // Password reset function
   const resetPassword = async (email) => {
     setIsLoading(true);
-    
+
     try {
       const result = await authApi.resetPassword(email);
-      
+
       if (result.success) {
         Alert.alert('Password Reset', result.message);
         return { success: true, message: result.message };
@@ -130,13 +130,13 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logout = async () => {
     setIsLoading(true);
-    
+
     try {
       await authApi.logoutUser();
       setUser(null);
       setIsAuthenticated(false);
       console.log('user has been logged out');
-      
+
     } catch (error) {
       console.error('Logout error:', error);
       Alert.alert('Logout Failed', 'An unexpected error occurred. Please try again.');
@@ -153,14 +153,14 @@ export const AuthProvider = ({ children }) => {
       if (result.success) {
         setUser(result);
         setIsAuthenticated(true);
-        
-        return {success: true, ...result}; 
+
+        return { success: true, ...result };
       } else {
-          return {success: false, error: result.error || 'Login failed'};
+        return { success: false, error: result.error || 'Login failed' };
       }
     } catch (error) {
       console.error("Sign-in with Google failed:", error);
-      return {success: false, error: error.message};
+      return { success: false, error: error.message };
     } finally {
       setIsLoading(false);
     }
@@ -176,10 +176,10 @@ export const AuthProvider = ({ children }) => {
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       });
-  
+
       // Extract useful pieces of data from the credential
       const { identityToken, authorizationCode, email, user } = credential;
-  
+
       // Return everything the app might need for user creation or auth
       return {
         success: true,
@@ -198,8 +198,8 @@ export const AuthProvider = ({ children }) => {
       }
     }
   }
-  
-  
+
+
 
   // Prepare the value object with all the context data and functions
   const value = {
