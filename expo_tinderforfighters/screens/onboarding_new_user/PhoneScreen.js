@@ -17,7 +17,7 @@ export default function PhoneScreen({ navigation }) {
         if (phone) {
             console.log('Phone to submit:', phone);
             updateOnboarding({ phone });
-            navigation.navigate('Home') // change to the correct next page
+            navigation.navigate('Location Details');
         }
     };
     return (

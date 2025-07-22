@@ -282,7 +282,7 @@ export default function LoginScreen({ navigation }) {
       )}
 
       {/* Temporary button to navigate manually */}
-      <TouchableOpacity style={styles.forceHomeButton} onPress={() => navigation.navigate('Phone')}>
+      <TouchableOpacity style={styles.forceHomeButton} onPress={() => navigation.navigate('Personal Details')}>
         <Text>Home</Text>
       </TouchableOpacity>
     </LinearGradient>

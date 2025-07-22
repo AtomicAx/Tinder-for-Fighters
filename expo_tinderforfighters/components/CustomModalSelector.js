@@ -9,13 +9,16 @@ export default function CustomModalSelector({
     onChange,
     placeholder = 'Select...',
     width = 100,
+    returnValue = 'option', // 'value' | 'label' | 'option'
 }) {
     return (
         <ModalSelector
             data={data}
             cancelText='Cancel'
             onChange={(option) => {
-                onChange(option.value);
+                if (returnValue === 'option') onChange(option);
+                else if (returnValue === 'label') onChange(option.label);
+                else onChange(option.value);
             }}
         >
             <View style={[styles.selectBox, { width }]}>
@@ -25,7 +28,7 @@ export default function CustomModalSelector({
                         !value && styles.placeholderText,
                     ]}
                 >
-                    {value || placeholder}
+                    {value?.label || (typeof value === 'string' ? value : placeholder)}
                 </Text>
                 <Ionicons name='chevron-down' size={16} color='#657786' />
             </View>

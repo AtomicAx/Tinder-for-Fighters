@@ -80,7 +80,7 @@ export default function PersonalDetailsScreen({ navigation }) {
       <CustomModalSelector
         data={genderOptions}
         value={gender}
-        onChange={(val) => setGender(val)}
+        onChange={(val) => setGender(val.value)}
         placeholder='Select Gender'
         width={'80%'}
       />

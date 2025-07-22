@@ -60,7 +60,7 @@ export default function DateSelector({
 
     const handleDateChange = (newYear, newMonth, newDay) => {
         const isInvalidFeb29 =
-            newMonth === 2 && newDay >= 29 && newYear && !isLeapYear(newYear);
+            newMonth.value === 2 && newDay.value >= 29 && newYear.value && !isLeapYear(newYear.value);
         const currentKey = `${newYear}-${newMonth}-${newDay}`;
 
         if (isInvalidFeb29) {
@@ -68,7 +68,7 @@ export default function DateSelector({
                 setLastInvalid(currentKey);
                 Alert.alert(
                     'Invalid Date',
-                    `${newYear} is not a leap year. February only has 28 days.`
+                    `${newYear.value} is not a leap year. February only has 28 days.`
                 );
             }
             setDay(28);
@@ -77,9 +77,9 @@ export default function DateSelector({
 
         setLastInvalid(null); // reset tracker when valid
         if (newYear && newMonth && newDay) {
-            const formatted = `${newMonth.toString().padStart(2, '0')}/${newDay
+            const formatted = `${newMonth.value.toString().padStart(2, '0')}/${newDay.value
                 .toString()
-                .padStart(2, '0')}/${newYear}`;
+                .padStart(2, '0')}/${newYear.value}`;
             onChange?.(formatted);
             console.log('DOB:', formatted);
         }
