@@ -3,88 +3,36 @@ import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Platform } 
 import { LinearGradient } from 'expo-linear-gradient';
 import { useOnboarding } from '../../context/onboardingContext';
 import { Ionicons } from '@expo/vector-icons';
-import { getWeightClass, weightClasses } from '../../utils/weightClasses';
-import HeightSelector from '../../components/HeightSelector';
 
-export default function FighterMeasurablesScreen({ navigation }) {
-    const { updateOnboarding, onboardingData } = useOnboarding()
-    const [weight, setWeight] = useState('');
-    const [height, setHeight] = useState('');
-    const [reach, setReach] = useState('');
+export default function NicknameScreen({ navigation }) {
+    const { updateOnboarding } = useOnboarding();
+    const [nickname, setNickname] = useState('');
 
-    const handleFighterMeasurables = () => {
-        if (!weight) {
-            alert("Weight is required");
-            return;
-        } else if (weight < 85 || weight > 400) {
-            alert("Please enter a valid weight between 85 and 400 lbs");
-            return;
-        } else if (!height) {
-            alert("Height is required");
-            return;
-        } else if (!reach) {
-            alert("Reach is required");
-            return;
-        } else if (reach < 40 || reach > 99) {
-            alert("Please enter a valid reach between 40 and 99 inches");
-            return;
-        } else {
-            console.log('this is onboarding data:', onboardingData.primaryDiscipline);
-            const parsedWeight = parseInt(weight);
-
-            const weightClass = getWeightClass(onboardingData.primaryDiscipline, parsedWeight);
-            updateOnboarding({
-                weight: parsedWeight,
-                weightClass,
-                height,
-                reach: parseInt(reach),
-            })
-
-            navigation.navigate('Nickname');
-
-
-        }
-    }
+    const handleNickname = () => {
+        updateOnboarding({
+            nickname,
+        })
+    };
 
     return (
         <LinearGradient
             colors={['#0052FF', '#4F8FFF', '#E5EDFF']}
             style={styles.container}>
-            <Text style={styles.titleText}>Lets get your measurables!</Text>
-            <View>
-                <HeightSelector
-
-                    onChange={setHeight}
-                />
-            </View>
-            <Text style={styles.label}>What is your fighting weight?</Text>
+            <Text style={styles.titleText}>What is your fighting nickname or alias?</Text>
+            <Text style={styles.label}>Dont have one? You can create one now or just hit next!</Text>
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.textInput}
-                    placeholder="Weight (lbs)"
+                    placeholder="Nickname/Alias"
                     placeholderTextColor="#657786"
-                    value={weight}
-                    onChangeText={setWeight}
-                    keyboardType="numeric"
-                    maxLength={3}
-                />
-            </View>
-            <Text style={styles.label}>What is your reach?</Text>
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="Reach (inches)"
-                    placeholderTextColor="#657786"
-                    value={reach}
-                    onChangeText={setReach}
-                    keyboardType="numeric"
-                    maxLength={2}
+                    value={nickname}
+                    onChangeText={setNickname}
                 />
             </View>
             <View>
                 <TouchableOpacity
                     style={styles.primaryButton}
-                    onPress={handleFighterMeasurables}
+                    onPress={handleNickname}
                 >
                     <Text style={styles.buttonText}>Next</Text>
                 </TouchableOpacity>
@@ -165,4 +113,3 @@ const styles = StyleSheet.create({
         padding: 8,
     },
 });
-
