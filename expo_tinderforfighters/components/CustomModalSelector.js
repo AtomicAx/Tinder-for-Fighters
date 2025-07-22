@@ -30,7 +30,7 @@ export default function CustomModalSelector({
                 >
                     {value?.label || (typeof value === 'string' ? value : placeholder)}
                 </Text>
-                <Ionicons name='chevron-down' size={16} color='#657786' />
+                <Ionicons name='chevron-down' size={16} color='black' />
             </View>
         </ModalSelector>
     );

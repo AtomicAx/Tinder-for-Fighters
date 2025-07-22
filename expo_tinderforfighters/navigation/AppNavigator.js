@@ -7,6 +7,8 @@ import EmailVerificationScreen from '../screens/onboarding_new_user/EmailVerific
 import PersonalDetailsScreen from '../screens/onboarding_new_user/PersonalDetailsScreen';
 import PhoneScreen from '../screens/onboarding_new_user/PhoneScreen';
 import LocationDetailsScreen from '../screens/onboarding_new_user/LocationDetailsScreen';
+import FighterDetailsScreen from '../screens/onboarding_new_user/FighterDetailsScreen';
+import FighterMeasurablesScreen from '../screens/onboarding_new_user/FighterMeasurablesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +21,7 @@ export default function AppNavigator() {
       <Stack.Screen name="Location Details" component={LocationDetailsScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Phone" component={PhoneScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Fighter Details" component={FighterDetailsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Fighter Measurables" component={FighterMeasurablesScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>
