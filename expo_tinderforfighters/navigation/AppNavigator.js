@@ -9,7 +9,8 @@ import PhoneScreen from '../screens/onboarding_new_user/PhoneScreen';
 import LocationDetailsScreen from '../screens/onboarding_new_user/LocationDetailsScreen';
 import FighterDetailsScreen from '../screens/onboarding_new_user/FighterDetailsScreen';
 import FighterMeasurablesScreen from '../screens/onboarding_new_user/FighterMeasurablesScreen';
-import NicknameScreen from '../screens/onboarding_new_user/NicknameScreen';
+import NicknameSelectionScreen from '../screens/onboarding_new_user/NicknameSelectionScreen';
+import PhotoUploadScreen from '../screens/onboarding_new_user/PhotoUploadScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,8 @@ export default function AppNavigator() {
       <Stack.Screen name="Phone" component={PhoneScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Fighter Details" component={FighterDetailsScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Fighter Measurables" component={FighterMeasurablesScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Nickname" component={NicknameScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Nickname" component={NicknameSelectionScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Photo Upload" component={PhotoUploadScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>

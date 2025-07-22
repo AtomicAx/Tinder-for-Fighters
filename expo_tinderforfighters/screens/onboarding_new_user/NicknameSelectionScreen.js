@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useOnboarding } from '../../context/onboardingContext';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function NicknameScreen({ navigation }) {
+export default function NicknameSelectionScreen({ navigation }) {
     const { updateOnboarding } = useOnboarding();
     const [nickname, setNickname] = useState('');
 
@@ -12,6 +12,8 @@ export default function NicknameScreen({ navigation }) {
         updateOnboarding({
             nickname,
         })
+
+        navigation.navigate("Home") // update with correct landing page
     };
 
     return (
@@ -19,7 +21,7 @@ export default function NicknameScreen({ navigation }) {
             colors={['#0052FF', '#4F8FFF', '#E5EDFF']}
             style={styles.container}>
             <Text style={styles.titleText}>What is your fighting nickname or alias?</Text>
-            <Text style={styles.label}>Dont have one? You can create one now or just hit next!</Text>
+            <Text style={styles.label}>Dont have one?{"\n"}You can create one now or just hit next!</Text>
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.textInput}
@@ -102,6 +104,8 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 12,
         fontSize: 18,
+        marginHorizontal: 20,
+        textAlign: 'center',
         alignSelf: 'center',
         color: 'black',
     },
