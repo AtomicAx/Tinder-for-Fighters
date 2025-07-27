@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
-import CountryPicker from 'react-native-country-picker-modal';
+import { View, TextInput, StyleSheet, Platform, Text } from 'react-native';
+import CustomModalSelector from '../components/CustomModalSelector';
 import { parsePhoneNumberFromString, AsYouType } from 'libphonenumber-js';
-import { MaterialIcons } from '@expo/vector-icons';
+
+import countries from '../utils/countries.json'; // each item: { key: 'US', label: '🇺🇸 United States', value: '1' }
 
 export default function PhoneNumberInput({ onValidChange }) {
-    const [countryCode, setCountryCode] = useState('US');
-    const [callingCode, setCallingCode] = useState('1');
+    const [country, setCountry] = useState({ key: '🇺🇸 +1 ', label: 'United States', value: '1' });
     const [phone, setPhone] = useState('');
     const [isValid, setIsValid] = useState(false);
-    const [modalVisable, setModalVisable] = useState(false);
 
     const handlePhoneChange = (text) => {
-        const formatter = new AsYouType(countryCode);
-        const formatted = formatter.input(text);
-        setPhone(formatted);
+        const digitsOnly = text.replace(/\D/g, '').slice(0, 10); // keep only 0-9 and max 10 digits
+        setPhone(digitsOnly);
 
-        const parsed = parsePhoneNumberFromString(`+${callingCode}${formatted.replace(/\D/g, '')}`);
+        const parsed = parsePhoneNumberFromString(`+${country.value}${digitsOnly}`);
         const valid = parsed?.isValid() || false;
         setIsValid(valid);
 
@@ -25,41 +23,28 @@ export default function PhoneNumberInput({ onValidChange }) {
         }
     };
 
-    const handleCountrySelect = (country) => {
-        setCountryCode(country.cca2);
-        setCallingCode(country.callingCode[0]);
-        setModalVisable(false);
-    };
-
     return (
         <View style={styles.container}>
-            <View style={styles.phoneRow}>
-                <TouchableOpacity
-                    style={styles.countrySelector}
-                    onPress={() => setModalVisable(true)}
-                    activeOpacity={0.8}
-                >
-                    <CountryPicker
-                        countryCode={countryCode}
-                        withFlag
-                        withCallingCode
-                        withEmoji
-                        onSelect={handleCountrySelect}
-                        visible={modalVisable}
-                        onClose={() => setModalVisable(false)}
+            <View style={styles.combinedRow}>
+                <View style={styles.selectorContainer}>
+                    <CustomModalSelector
+                        data={countries}
+                        value={country.key}
+                        onChange={setCountry}
+                        width={'100%'}
+                        placeholder='Country'
+                        returnValue='option'
                     />
 
-                    <Text style={styles.code}>+{callingCode}</Text>
-                    <MaterialIcons name="keyboard-arrow-down" size={20} color="666" paddingLeft={10} />
-                </TouchableOpacity>
+                </View>
                 <TextInput
                     style={styles.input}
                     value={phone}
                     onChangeText={handlePhoneChange}
-                    keyboardType="phone-pad"
-                    selectionColor="black"
-                    cursorColor="black"
-
+                    keyboardType='phone-pad'
+                    selectionColor='black'
+                    cursorColor='black'
+                    placeholder='Phone number'
                 />
             </View>
         </View>
@@ -71,38 +56,23 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: '80%',
     },
-    phoneRow: {
+    combinedRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 10,
-        paddingBottom: 8,
-        marginBottom: 24,
-    },
-    code: {
-        fontSize: 18,
-    },
-    countrySelector: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderBottomWidth: 1,
         borderColor: 'black',
-        borderWidth: 0,
-        paddingBottom: Platform.select({
-            ios: 2,
-            android: 8,
-        }),
+        backgroundColor: '#F5F8FA',
+        borderRadius: 25,
+        marginBottom: 24,
+        height: 50,
+    },
+    selectorContainer: {
+        width: 100,
+        marginRight: 8,
+
     },
     input: {
         flex: 1,
         fontSize: 18,
-        borderBottomWidth: 1,
-        borderColor: 'black',
-        borderWidth: 0,
-        backgroundColor: 'transparent',
-        paddingBottom: 10,
-        marginBottom: Platform.select({
-            ios: -7,
-            android: 8,
-        }),
+
     },
 });

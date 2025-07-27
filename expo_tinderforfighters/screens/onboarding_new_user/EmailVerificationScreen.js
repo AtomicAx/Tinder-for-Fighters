@@ -98,7 +98,7 @@ export default function EmailVerificationScreen() {
       colors={['#0052FF', '#4F8FFF', '#E5EDFF']}
       style={styles.container}>
       <Text style={styles.titleText}>Enter the 6-digit verification code sent to your email</Text>
-      <View style={styles.inputCodeView}>
+      <View>
         <CodeField
           ref={ref}
           {...props}

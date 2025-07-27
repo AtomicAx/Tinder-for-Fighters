@@ -282,7 +282,7 @@ export default function LoginScreen({ navigation }) {
       )}
 
       {/* Temporary button to navigate manually */}
-      <TouchableOpacity style={styles.forceHomeButton} onPress={() => navigation.navigate('Fighter Details')}>
+      <TouchableOpacity style={styles.forceHomeButton} onPress={() => navigation.navigate('Photo Upload')}>
         <Text>Home</Text>
       </TouchableOpacity>
     </LinearGradient>

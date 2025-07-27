@@ -50,7 +50,7 @@ export default function FighterMeasurablesScreen({ navigation }) {
         <LinearGradient
             colors={['#0052FF', '#4F8FFF', '#E5EDFF']}
             style={styles.container}>
-            <Text style={styles.titleText}>Lets get your measurables!</Text>
+            <Text style={styles.titleText}>Lets get your measurables</Text>
             <View>
                 <HeightSelector
 

@@ -26,10 +26,10 @@ export default function PhoneScreen({ navigation }) {
             style={styles.container}
         >
             <View>
-                <Text style={styles.titleText}>Can we get your number?</Text>
+                <Text style={styles.titleText}>Drop your number below</Text>
                 <PhoneNumberInput onValidChange={setPhone} />
                 <Text style={styles.infoText}>
-                    Once we have your digits, you will be able to login with your phone number rather than email and password!!
+                    Once we have your digits, you will be able to login with your phone number rather than email and password
                 </Text>
                 <TouchableOpacity
                     style={[styles.primaryButton, !phone && styles.disabled]}

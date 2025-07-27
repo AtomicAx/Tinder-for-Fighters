@@ -32,7 +32,7 @@ export default function FighterDetailsScreen({ navigation }) {
         <LinearGradient
             colors={['#0052FF', '#4F8FFF', '#E5EDFF']}
             style={styles.container}>
-            <Text style={styles.titleText}>Choose your preferred fighting styles!</Text>
+            <Text style={styles.titleText}>Choose your preferred fighting styles</Text>
 
             <View>
                 <Text style={styles.label}>Primary Discipline</Text>
