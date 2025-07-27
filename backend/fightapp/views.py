@@ -57,7 +57,7 @@ def generate_unique_username(base):
 
 # picture upload
 @api_view(['POST'])
-@api_view([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def request_profile_upload_url(request):
     content_type = request.data.get('content_type')
     
