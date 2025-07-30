@@ -1,4 +1,4 @@
-from .models import UserInfo, EmailVerification
+from .models import UserInfo, EmailVerification, AuthUser
 from .Serializers import EmailSerializer, EmailVerificationSerializer, UserInfoSerializer, GoogleLoginSerializer
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -92,7 +92,7 @@ def set_profile_picture(request):
 def complete_onboarding(request):
     data = request.data
     username = request.user
-    user = User.objects.get(username=username)
+    user = AuthUser.objects.get(username=username)
     user_info = UserInfo.objects.create(user=user)
     
     # this should be in the auth_user table
