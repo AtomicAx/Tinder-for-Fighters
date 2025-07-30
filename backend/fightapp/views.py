@@ -93,7 +93,7 @@ def complete_onboarding(request):
     data = request.data
     username = request.user
     user = User.objects.get(username=username)
-    user_info = UserInfo.objects.create(user=user)
+    user_info = UserInfo.objects.create()
     
     # this should be in the auth_user table
     user.first_name = data.get('firstName')
