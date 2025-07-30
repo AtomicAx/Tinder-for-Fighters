@@ -149,7 +149,9 @@ export default function LoginScreen({ navigation }) {
       password2,
       username
     };
-    navigation.navigate('EmailVerification', { userData });
+    navigation.navigate('Email Verification', { userData });
+    
+    // Register will be handled after email verification on the next screen -- delete this 
     //const result = await register(userData);
 
     //if (result.success) {

@@ -30,7 +30,7 @@ export default function LocationDetailsScreen({ navigation }) {
             zipcode,
         });
 
-        navigation.navigate('Home'); // change to the correct next screen
+        navigation.navigate('Fighter Details');
     }
 
 

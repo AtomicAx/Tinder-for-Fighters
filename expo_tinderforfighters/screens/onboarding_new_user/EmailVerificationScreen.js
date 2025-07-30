@@ -15,7 +15,7 @@ export default function EmailVerificationScreen() {
   const { register, isLoading } = useAuth();
   const route = useRoute();
   const navigation = useNavigation();
-  //const { userData } = route.params;
+  const { userData } = route.params;
 
   const [code, setCode] = useState('');
   const [verifying, setVerifying] = useState(false);
@@ -54,7 +54,7 @@ export default function EmailVerificationScreen() {
     if (result.success) {
       const registerResult = await register(userData);
       if (registerResult.success) {
-        navigation.replace('Home'); // change to next step of account creation
+        navigation.replace('Personal Details');
       } else {
         Alert.alert('Registration Failed', registerResult.error);
       }

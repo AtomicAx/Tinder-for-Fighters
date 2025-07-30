@@ -13,7 +13,7 @@ export default function NicknameSelectionScreen({ navigation }) {
             nickname,
         })
 
-        navigation.navigate("Home") // update with correct landing page
+        navigation.navigate("Photo Upload") // update with correct landing page
     };
 
     return (

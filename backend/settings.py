@@ -206,6 +206,9 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
+# sendgrid api key
+SENDGRID_API_KEY = config('SENDGRID_API_KEY')
+
 SILENCED_SYSTEM_CHECKS = [
     'allauth.W001', # silence username required warning
     'allauth.W002', # silence email required warning

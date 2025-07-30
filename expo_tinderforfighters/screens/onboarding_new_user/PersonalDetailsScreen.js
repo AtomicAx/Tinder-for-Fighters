@@ -43,7 +43,7 @@ export default function PersonalDetailsScreen({ navigation }) {
         gender,
       });
 
-      navigation.navigate('Phone') // Change to the correct next screen
+      navigation.navigate('Phone')
     }
 
   };
