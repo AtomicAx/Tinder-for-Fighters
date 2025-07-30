@@ -54,14 +54,12 @@ export default function PhotoUploadScreen({ navigation }) {
                 }),
             });
 
-            
-
-            const { upload_url, s3_key } = await presignRes.json();
-            console.log('upload url', upload_url, 's3key', s3_key);
             if (!presignRes.ok) {
                 throw new Error('Failed to get presigned upload URL');
             }
 
+            const { upload_url, s3_key } = await presignRes.json();
+            
             // upload to s3
             const uploadRes = await fetch(upload_url, {
                 method: 'PUT',

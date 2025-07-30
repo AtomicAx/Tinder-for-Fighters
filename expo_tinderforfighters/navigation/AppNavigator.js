@@ -26,7 +26,7 @@ export default function AppNavigator() {
       <Stack.Screen name="Fighter Measurables" component={FighterMeasurablesScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Nickname" component={NicknameSelectionScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Photo Upload" component={PhotoUploadScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>
   );

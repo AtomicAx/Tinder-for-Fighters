@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Alert } from 'react-native';
 import CustomModalSelector from '../components/CustomModalSelector';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 
 const currentYear = new Date().getFullYear();
@@ -15,6 +16,7 @@ const months = Array.from({ length: 12 }, (_, i) => ({
     value: i + 1,
 }));
 const getDayOptions = (month) => {
+    
     const daysInMonth = {
         1: 31,
         2: 29,
@@ -30,7 +32,7 @@ const getDayOptions = (month) => {
         12: 31,
     };
 
-    const max = daysInMonth[month] || 31;
+    const max = daysInMonth[month?.value] || 31;
     return Array.from({ length: max }, (_, i) => ({
         key: i,
         label: (i + 1).toString().padStart(2, '0'),
@@ -45,22 +47,20 @@ export default function DateSelector({
     onChange,
 }) {
 
-    const currentYear = new Date().getFullYear();
-
     const [year, setYear] = useState(null);
     const [month, setMonth] = useState(null);
     const [day, setDay] = useState(null);
-
-    const isLeapYear = (year) => {
-        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-    };
 
 
     const [lastInvalid, setLastInvalid] = useState(null);
 
     const handleDateChange = (newYear, newMonth, newDay) => {
+        getDayOptions(newMonth);
         const isInvalidFeb29 =
-            newMonth.value === 2 && newDay.value >= 29 && newYear.value && !isLeapYear(newYear.value);
+            newMonth?.value === 2 &&
+            newDay?.value >= 29 &&
+            !((newYear?.value % 4 === 0 && newYear?.value % 100 !== 0) || newYear?.value % 400 === 0);
+
         const currentKey = `${newYear}-${newMonth}-${newDay}`;
 
         if (isInvalidFeb29) {
@@ -68,10 +68,10 @@ export default function DateSelector({
                 setLastInvalid(currentKey);
                 Alert.alert(
                     'Invalid Date',
-                    `${newYear.value} is not a leap year. February only has 28 days.`
+                    `${newYear?.value} is not a leap year. February only has 28 days.`
                 );
             }
-            setDay(28);
+            setDay({ label: '28', value: 28 });
             return;
         }
 
@@ -87,7 +87,11 @@ export default function DateSelector({
 
 
 
-
+    useEffect(() => {
+        if (year && month && day) {
+            handleDateChange(year, month, day);
+        }
+    }, [year, month, day]);
 
     return (
         <View style={styles.wrapper}>
@@ -98,7 +102,11 @@ export default function DateSelector({
                     value={month}
                     onChange={(val) => {
                         setMonth(val);
-                        handleDateChange(year, val, day);
+                        const validDayCount = getDayOptions(val).length;
+                        if(day?.value > validDayCount) {
+                            setDay(null);
+                        }
+                        handleDateChange(year, val, day?.value <= validDayCount ? day : null);
                     }}
                     placeholder="MM"
                     width={90}
