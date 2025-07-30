@@ -51,7 +51,7 @@ export default function PersonalDetailsScreen({ navigation }) {
     <LinearGradient
       colors={['#0052FF', '#4F8FFF', '#E5EDFF']}
       style={styles.container}>
-      <Text style={styles.titleText}>Welcome {user?.username || 'Faggot'}</Text>
+      <Text style={styles.titleText}>Welcome {user?.username || 'fighter'}</Text>
       <Text style={styles.titleText}>Lets get started</Text>
 
       <View style={styles.inputView}>

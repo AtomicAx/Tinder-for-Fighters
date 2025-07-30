@@ -12,6 +12,7 @@ export default function PhotoUploadScreen({ navigation }) {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
     const { user } = useAuth();
+    const { updateOnboarding, onboarding } = useOnboarding();
 
     useEffect(() => {
         (async () => {
@@ -32,8 +33,7 @@ export default function PhotoUploadScreen({ navigation }) {
 
         if (!result.canceled && result.assets?.length > 0) {
             const asset = result.assets[0];
-            setImage(asset.uri);
-            uploadToS3(asset);
+            setImage(asset);
         }
     };
 
@@ -54,36 +54,72 @@ export default function PhotoUploadScreen({ navigation }) {
                 }),
             });
 
-            const { url, fields, s3_url } = await presignRes.json();
+            if (!presignRes.ok) {
+                throw new Error('Failed to get presigned upload URL');
+            }
 
-            // Build form data
-            const formData = new FormData();
-            Object.entries(fields).forEach(([key, value]) => {
-                formData.append(key, value);
-            });
-
-            formData.append('file', {
-                uri: asset.uri,
-                name: asset.fileName || 'profile.jpg',
-                type: asset.mimeType || 'image/jpeg',
-            });
+            const { upload_url, s3_key } = await presignRes.json();
 
             // upload to s3
-            const uploadRes = await fetch(url, {
-                method: 'POST',
-                body: formData,
+            const uploadRes = await fetch(upload_url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': asset.mimeType || 'image/jpeg'
+                },
+                body: await (await fetch(asset.uri)).blob()
             });
 
             if (uploadRes.ok) {
                 console.log('Image uploaded successfully');
+                return s3_key;
             } else {
                 throw new Error('Upload to s3 failed');
             }
         } catch (error) {
             console.error(error);
             alert('Upload Error', error.message || 'something went wrong');
+            return null;
         } finally {
             setUploading(false);
+        }
+    };
+
+    const handlePhotoUpload = async () => {
+        if (!image) {
+            Alert.alert('No Image Selected', 'Please choose an image or press the skip button');
+            return;
+        }
+
+        const s3_key = await uploadToS3(image);
+
+        if (s3_key) {
+            updateOnboarding({
+                profile_picture_url: s3_key
+            })
+
+            submitOnboarding();
+        }
+    };
+
+    const handleSkipPhoto = async () => {
+        submitOnboarding();
+    };
+
+    const submitOnboarding = async () => {
+        const res = await fetch(`${API_BASE_URL}/api/user-info/complete-onboarding/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${user.token}`,
+            },
+            body: JSON.stringify(onboarding),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            navigation.replace('Home');
+        } else {
+            alert('Onboarding Failed', data.error || 'Something went wrong');
         }
     };
     return (
@@ -94,22 +130,28 @@ export default function PhotoUploadScreen({ navigation }) {
             <View>
                 {image && (
                     <Image
-                        source={{ uri: image }}
-                        style={{ width: 150, height: 150, borderRadius: 75, marginBottom: 10 }}
+                        source={{ uri: image.uri }}
+                        style={styles.image}
                     />
                 )}
                 {uploading ? (
                     <ActivityIndicator size="large" />
                 ) : (
-                    <Button title="Pick a Profile Photo" onPress={pickImage} color='black' />
+                    <Button title="Pick a Profile Photo" onPress={pickImage} disabled={uploading} color='black' />
                 )}
             </View>
+
             <View>
                 <TouchableOpacity
                     style={styles.primaryButton}
+                    onPress={handlePhotoUpload}
+                    disabled={uploading}
                 >
                     <Text style={styles.buttonText}>Next</Text>
                 </TouchableOpacity>
+            </View>
+            <View>
+                <Button title="Skip" onPress={handleSkipPhoto} color='white' />
             </View>
             <TouchableOpacity
                 style={styles.backButton}
@@ -187,5 +229,12 @@ const styles = StyleSheet.create({
         left: 20,
         zIndex: 10,
         padding: 8,
+    },
+    image: {
+        width: 150,
+        height: 150,
+        borderRadius: 25,
+        marginBottom: 10,
+        alignSelf: 'center',
     },
 });

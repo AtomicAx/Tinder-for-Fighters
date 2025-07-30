@@ -327,7 +327,7 @@ class UserInfo(models.Model):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'user_info'
 
 class EmailVerification(models.Model):
