@@ -12,7 +12,7 @@ export default function PhotoUploadScreen({ navigation }) {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
     const { user } = useAuth();
-    const { updateOnboarding, onboarding } = useOnboarding();
+    const { updateOnboarding, onboardingData } = useOnboarding();
 
     useEffect(() => {
         (async () => {
@@ -114,7 +114,7 @@ export default function PhotoUploadScreen({ navigation }) {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${user.token}`,
             },
-            body: JSON.stringify(onboarding),
+            body: JSON.stringify(onboardingData),
         });
 
         const data = await res.json();

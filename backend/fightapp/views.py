@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from datetime import timedelta
+from datetime import timedelta, datetime
 from backend.services import email_verification
 from backend.services.s3_utils import generate_presigned_upload_url
 import requests
@@ -91,10 +91,9 @@ def set_profile_picture(request):
 @permission_classes([IsAuthenticated])
 def complete_onboarding(request):
     data = request.data
-    print("data:", data)
     username = request.user
     user = User.objects.get(username=username)
-    user_info = UserInfo.objects.create()
+    user_info = UserInfo.objects.create(user=user)
     
     # this should be in the auth_user table
     user.first_name = data.get('firstName')
@@ -120,9 +119,18 @@ def complete_onboarding(request):
     # get lat and long from google
     user_info.latitude, user_info.longitude = geocode_address(user_info.location)
     
+    # convert date to correct format
+    dob = data.get('dob')
+    dob_convert = None
+    if dob:
+        try:
+            dob_convert = datetime.strptime(dob, "%m/%d/%Y").date()
+        except ValueError:
+            return Response({'error': 'Invaliddate format. Use mm-dd-yyyy'}, status=400)
+    user_info.date_of_birth = dob_convert
+    print(dob_convert)
     # rest of the fields
     user_info.nickname = data.get('nickname')
-    user_info.date_of_birth = data.get('dob')
     user_info.gender = data.get('gender')
     user_info.phone_number = data.get('phone')
     user_info.weight_lbs = data.get('weight')
