@@ -91,8 +91,8 @@ def set_profile_picture(request):
 @permission_classes([IsAuthenticated])
 def complete_onboarding(request):
     data = request.data
-    user = request.user
-    print(user)
+    username = request.user
+    user = User.objects.get(username=username)
     user_info = UserInfo.objects.create(user=user)
     
     # this should be in the auth_user table
