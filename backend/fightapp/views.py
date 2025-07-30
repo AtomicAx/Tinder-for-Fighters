@@ -92,7 +92,8 @@ def set_profile_picture(request):
 def complete_onboarding(request):
     data = request.data
     user = request.user
-    user_info = user.profile
+    print(user)
+    user_info = UserInfo.objects.create(user=user)
     
     # this should be in the auth_user table
     user.first_name = data.get('firstName')
